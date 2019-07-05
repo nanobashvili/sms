@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_4_0.xsd"
+           version="3.0">
+
+    <!--    უბრალოდ დასახელებაა პროექტის, არაფერი განსაკუთრებული-->
+    <display-name>sms</display-name>
+
+    <!--    პროექტში სერვლეტის აღწერა, რათა JVM -მა დაინახოს და "დაიჯეროს" რომ ეს სერვლეტია და უნდა ამუშაოს ვებ-ზე და არა კონსოლში ან სხვა პლატფორმაზე-->
+    <servlet>
+        <servlet-name>student</servlet-name>
+        <servlet-class>ge.digitaledu.sms.controller.StudentController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>student</servlet-name>
+        <url-pattern>/Students</url-pattern>
+    </servlet-mapping>
+</web-app>
