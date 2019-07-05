@@ -1,0 +1,72 @@
+Entity  -----------------------------------------------
+
+Student *
+	Id
+	First name
+	Last name
+	Birthdate
+	Gender
+	Lecture
+    Status
+    Private number
+
+Lecture *
+	Id
+	Lecture name
+	Current state
+
+Speaker *
+	Id
+	First name
+	Last name
+	Birthdate
+	Gender
+	Lecture
+	Private number
+	Salary
+	Status
+
+Lecture *
+	Id
+	Lecture name
+	Duration
+	Lecture
+	Student quantity
+
+Stuff *
+	Id
+	First name
+	Last name
+	Position
+	Salary
+
+Position *
+	Id
+	Position name
+
+Payment *
+	Id
+	Student
+	Payment date
+	Lecture
+	Payments status
+
+User *
+	Id
+	User role
+	Username
+	Password
+	User status
+
+User role *
+	Id
+	Role name
+	User permissions
+
+User permission *
+	Permission name
+    Permission description
+
+
+DB Methods -----------------------------------------------
+Save(), get(), getAll(), delete(), update()
