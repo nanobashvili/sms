@@ -9,12 +9,26 @@
     <display-name>sms</display-name>
 
     <!--    პროექტში სერვლეტის აღწერა, რათა JVM -მა დაინახოს და "დაიჯეროს" რომ ეს სერვლეტია და უნდა ამუშაოს ვებ-ზე და არა კონსოლში ან სხვა პლატფორმაზე-->
-    <servlet>
-        <servlet-name>student</servlet-name>
-        <servlet-class>ge.digitaledu.sms.controller.StudentController</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>student</servlet-name>
         <url-pattern>/Students</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>student</servlet-name>
+        <servlet-class>ge.digitaledu.sms.controller.StudentController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>lecture</servlet-name>
+        <url-pattern>/Lecture</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>lecture</servlet-name>
+        <servlet-class>ge.digitaledu.sms.controller.LectureController</servlet-class>
+    </servlet>
 </web-app>
+
+<!--
+amirans snickers
+გივი სნიკერსი უფრო პატარა
+-->

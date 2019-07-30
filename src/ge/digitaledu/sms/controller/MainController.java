@@ -2,9 +2,11 @@ package ge.digitaledu.sms.controller;
 
 import ge.digitaledu.sms.utils.Method;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * ეს არის აბსტრაქტული კლასი, მთავარი კონტროლერი, რომელიც ე.წ. სერვლეტის შვილობილი კლასია
@@ -31,5 +33,5 @@ abstract public class MainController extends HttpServlet {
      * შესაბამისად ყველა შვილობილ კონტროლერს(სერვლეტს), რომელიც გამოვა ამ მშობელი კონტროლერიდან ექნება ეს მეთოდი გადატვირთული
      * იხ. StudentController კლასი
      */
-    abstract protected void request(HttpServletRequest request, HttpServletResponse response, Method method);
+    abstract protected void request(HttpServletRequest req, HttpServletResponse resp, Method method);
 }

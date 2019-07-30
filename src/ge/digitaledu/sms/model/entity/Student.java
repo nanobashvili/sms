@@ -13,7 +13,7 @@ public class Student {
 
     private String lastName;
 
-    private Date birthDate;
+    private String birthDate;
 
     private Gender gender;
 
@@ -47,11 +47,11 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -85,5 +85,19 @@ public class Student {
 
     public void setPn(String pn) {
         this.pn = pn;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", gender=" + gender +
+                ", lecture=" + lecture +
+                ", status=" + status +
+                ", pn='" + pn + '\'' +
+                '}';
     }
 }

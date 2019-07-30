@@ -1,8 +1,14 @@
 package ge.digitaledu.sms.model;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+import ge.digitaledu.sms.model.entity.Lecture;
 import ge.digitaledu.sms.utils.Utils;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * ეს არის კონკრეტული იმპლემენტაცია ყველა მოდელის, სადაც უშუალოდ ხდება სტუდენტზე ან სხვა ენთითიზე მანიპულაცია (შენახვა, წაშლა, ცვლილება, წამოღება და ა.შ.)
@@ -20,6 +26,19 @@ import java.lang.reflect.Field;
  */
 public class MainModelService implements MainModel {
 
+    private Connection databaseConnection() throws SQLException {
+        /**
+         * Mysql connection
+         */
+        MysqlDataSource dtSrc = new MysqlDataSource();
+        dtSrc.setUser("root");
+        dtSrc.setPassword("root");
+        dtSrc.setServerName("localhost");
+        dtSrc.setDatabaseName("sms");
+
+        return dtSrc.getConnection();
+    }
+
     /**
      * ამ კონკრეტულ იმპლემენტაციაში მე ვიგებ, რომ Student ენთითი მომმართავს და შესაბამისად სტუდენტის ცხრილშ უნდა შევინახო მონაცემები
      * მარტივად ვაწყობ INSERT query-ს
@@ -27,6 +46,10 @@ public class MainModelService implements MainModel {
      */
     @Override
     public <T> void save(T obj) {
+        Connection conn = null;
+        Statement stm = null;
+        ResultSet rs = null;
+
         try {
             StringBuilder saveStr = new StringBuilder("INSERT INTO `" + obj.getClass().getSimpleName().toLowerCase() + "` (");
 
@@ -34,8 +57,8 @@ public class MainModelService implements MainModel {
 
             String properties = "", values = "";
             for (Field field : fields) {
-                if (!field.equals("id")) {
-                    properties += field.getName() + ", ";
+                if (!field.getName().equals("id")) {
+                    properties += field.getName().toLowerCase() + ", ";
                 }
             }
 
@@ -48,19 +71,45 @@ public class MainModelService implements MainModel {
 
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (!field.equals("id")) {
-                    values += field.get(obj) + ", ";
+
+                if (!field.getName().equals("id")) {
+                    if (field.getName().equalsIgnoreCase("lecture")) {
+                        Lecture lecture = (Lecture) field.get(obj);
+                        values += "'" + lecture.getLectureName() + "', ";
+                    } else {
+                        values += "'" + field.get(obj) + "', ";
+                    }
                 }
             }
-            saveStr.append(Utils.trimRightToLeft(values.toString(), 2));
+            saveStr.append(Utils.trimRightToLeft(values, 2));
             saveStr.append(")");
 
             /**
              * დაბეჭდავს ბაზის INSERT-ს
              */
             System.out.println(saveStr); // TODO
+
+            conn = databaseConnection();
+            stm = conn.createStatement();
+
+            stm.execute(saveStr.toString());
+
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stm != null) {
+                    stm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                // catch error
+            }
         }
     }
 

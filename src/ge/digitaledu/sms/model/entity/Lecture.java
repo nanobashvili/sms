@@ -33,4 +33,13 @@ public class Lecture {
     public void setState(LectureState state) {
         this.state = state;
     }
+
+    @Override
+    public String toString() {
+        return "Lecture{" +
+                "id=" + id +
+                ", lectureName='" + lectureName + '\'' +
+                ", state=" + state +
+                '}';
+    }
 }
