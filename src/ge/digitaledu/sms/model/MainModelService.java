@@ -2,6 +2,7 @@ package ge.digitaledu.sms.model;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import ge.digitaledu.sms.model.entity.Lecture;
+import ge.digitaledu.sms.model.entity.Model;
 import ge.digitaledu.sms.utils.Utils;
 
 import java.lang.reflect.Field;
@@ -73,9 +74,8 @@ public class MainModelService implements MainModel {
                 field.setAccessible(true);
 
                 if (!field.getName().equals("id")) {
-                    if (field.getName().equalsIgnoreCase("lecture")) {
-                        Lecture lecture = (Lecture) field.get(obj);
-                        values += "'" + lecture.getLectureName() + "', ";
+                    if (field.get(obj).getClass().isAssignableFrom(Model.class)) {
+                        values += "'" + ((Model) field.get(obj)).getId() + "', ";
                     } else {
                         values += "'" + field.get(obj) + "', ";
                     }

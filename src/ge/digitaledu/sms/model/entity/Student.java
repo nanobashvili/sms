@@ -5,9 +5,7 @@ import ge.digitaledu.sms.common.StudentStatus;
 
 import java.util.Date;
 
-public class Student {
-
-    private int id;
+public class Student extends Model {
 
     private String firstName;
 
@@ -90,14 +88,14 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", birthDate=" + birthDate +
+                ", birthDate='" + birthDate + '\'' +
                 ", gender=" + gender +
                 ", lecture=" + lecture +
                 ", status=" + status +
                 ", pn='" + pn + '\'' +
+                ", id=" + id +
                 '}';
     }
 }

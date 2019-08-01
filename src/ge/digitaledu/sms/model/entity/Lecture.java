@@ -2,21 +2,11 @@ package ge.digitaledu.sms.model.entity;
 
 import ge.digitaledu.sms.common.LectureState;
 
-public class Lecture {
-
-    private int id;
+public class Lecture extends Model {
 
     private String lectureName;
 
     private LectureState state;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getLectureName() {
         return lectureName;
@@ -37,9 +27,9 @@ public class Lecture {
     @Override
     public String toString() {
         return "Lecture{" +
-                "id=" + id +
-                ", lectureName='" + lectureName + '\'' +
+                "lectureName='" + lectureName + '\'' +
                 ", state=" + state +
+                ", id=" + id +
                 '}';
     }
 }
