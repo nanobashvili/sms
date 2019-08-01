@@ -1,4 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <jsp:include page="header.jsp"></jsp:include>
 
@@ -26,7 +27,13 @@
     </tr>
     <tr>
       <td>სტატუსი: </td>
-      <td><input type="text" name="status"></td>
+      <td>
+        <select name="status">
+          <c:forEach items="${statusList}" var="status">
+            <option value="${status.value}">${status.value}</option>
+          </c:forEach>
+        </select>
+      </td>
     </tr>
     <tr>
       <td>პ. ნომერი: </td>

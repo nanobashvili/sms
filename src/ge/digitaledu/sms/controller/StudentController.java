@@ -81,7 +81,7 @@ public class StudentController extends MainController {
 
         if (method == Method.GET) {
             try {
-//                request.setAttribute("test", "test variable");
+                request.setAttribute("statusList", StudentStatus.values());
                 RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index.jsp");
                 dispatcher.forward(request, response);
             } catch (Exception ex) {
