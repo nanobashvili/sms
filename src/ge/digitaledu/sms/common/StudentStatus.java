@@ -7,9 +7,9 @@ package ge.digitaledu.sms.common;
 public enum StudentStatus {
     ACTIVE(1, "ACTIVE"),
 
-    INACTIVE(1, "INACTIVE"),
+    INACTIVE(2, "INACTIVE"),
 
-    PAUSED(1, "PAUSED");
+    PAUSED(3, "PAUSED");
 
     private int key;
 
