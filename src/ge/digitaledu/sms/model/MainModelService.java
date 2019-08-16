@@ -1,15 +1,16 @@
 package ge.digitaledu.sms.model;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import ge.digitaledu.sms.model.entity.Lecture;
 import ge.digitaledu.sms.model.entity.Model;
 import ge.digitaledu.sms.utils.Utils;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.lang.reflect.Method;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ეს არის კონკრეტული იმპლემენტაცია ყველა მოდელის, სადაც უშუალოდ ხდება სტუდენტზე ან სხვა ენთითიზე მანიპულაცია (შენახვა, წაშლა, ცვლილება, წამოღება და ა.შ.)
@@ -74,7 +75,7 @@ public class MainModelService implements MainModel {
                 field.setAccessible(true);
 
                 if (!field.getName().equals("id")) {
-                    if (field.get(obj).getClass().isAssignableFrom(Model.class)) {
+                    if (field.get(obj) instanceof Model) {
                         values += "'" + ((Model) field.get(obj)).getId() + "', ";
                     } else {
                         values += "'" + field.get(obj) + "', ";
@@ -84,15 +85,12 @@ public class MainModelService implements MainModel {
             saveStr.append(Utils.trimRightToLeft(values, 2));
             saveStr.append(")");
 
-            /**
-             * დაბეჭდავს ბაზის INSERT-ს
-             */
-            System.out.println(saveStr); // TODO
-
             conn = databaseConnection();
             stm = conn.createStatement();
 
             stm.execute(saveStr.toString());
+
+            System.out.println("Successfully added to database");
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -130,5 +128,60 @@ public class MainModelService implements MainModel {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public <T> List<T> getAll(T obj) {
+        Connection conn = null;
+        Statement stm = null;
+        ResultSet rs = null;
+
+        StringBuilder getStr = new StringBuilder("SELECT * FROM `" + obj.getClass().getSimpleName().toLowerCase() + "`");
+        getStr.append(" LIMIT 500"); // TODO must be dynamic
+
+        List<Object> arr = new ArrayList<>();
+
+        try {
+            conn = databaseConnection();
+            stm = conn.createStatement();
+            rs = stm.executeQuery(getStr.toString());
+
+            while (rs.next()) {
+                List<Object> elements = new ArrayList<>();
+
+                for (Field field : obj.getClass().getFields()) {
+                    field.setAccessible(true);
+                    if (field.getType().isEnum()) {
+                        elements.add(Enum.valueOf((Class<Enum>) field.getType(), rs.getString(field.getName())));
+//                    } else if (){
+//                        elements.add(rs.getString(field.getName()));
+//                    } else {
+                        elements.add(rs.getString(field.getName()));
+                    }
+                }
+                System.out.println(elements);
+                Method method = obj.getClass().getMethod("setData", obj.getClass());
+                method.invoke(obj, elements.toArray());
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stm != null) {
+                    stm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                // catch error
+            }
+        }
+
+        return null;
     }
 }

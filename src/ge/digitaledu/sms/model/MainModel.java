@@ -1,6 +1,6 @@
 package ge.digitaledu.sms.model;
 
-import org.omg.CORBA.Object;
+import java.util.List;
 
 /**
  * ეს არის მთავარი მოდელის (მშობელი მოდელის) ინტერფეისის მაგალითი, რომელიც პრინციპით გაქვს აბსტრაქტულ კლასს, მაგრად ოდნავ განსხვავებები აქვს, რომელსაც ორშაბათს გავივლით
@@ -15,4 +15,6 @@ public interface MainModel {
     <T> void save(T obj);
 
     <T> void delete(T obj, int id);
+
+    <T> List<T> getAll(T obj);
 }

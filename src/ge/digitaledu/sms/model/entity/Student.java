@@ -3,8 +3,6 @@ package ge.digitaledu.sms.model.entity;
 import ge.digitaledu.sms.common.Gender;
 import ge.digitaledu.sms.common.StudentStatus;
 
-import java.util.Date;
-
 public class Student extends Model {
 
     private String firstName;
@@ -20,14 +18,6 @@ public class Student extends Model {
     private StudentStatus status;
 
     private String pn;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;

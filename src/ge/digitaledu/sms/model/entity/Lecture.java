@@ -24,6 +24,12 @@ public class Lecture extends Model {
         this.state = state;
     }
 
+    public void setData(int id, String name, LectureState state) {
+        setState(state);
+        setLectureName(name);
+        setId(id);
+    }
+
     @Override
     public String toString() {
         return "Lecture{" +
