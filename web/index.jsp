@@ -3,6 +3,19 @@
 
 <jsp:include page="header.jsp"></jsp:include>
 
+<c:forEach items="${students}" var="student">
+  <div>
+      ${student.firstName}
+          ${student.lastName}
+  </div>
+</c:forEach>
+
+<br>
+<br>
+--------------------------------------------------------------------------------------------------------------------------------------------
+<br>
+<br>
+
 <form action="/sms/Students" method="post">
   <table cellspacing="0" cellpadding="0">
     <tr>

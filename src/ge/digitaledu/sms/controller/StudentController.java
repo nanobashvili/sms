@@ -3,8 +3,8 @@ package ge.digitaledu.sms.controller;
 import ge.digitaledu.sms.common.Gender;
 import ge.digitaledu.sms.common.LectureState;
 import ge.digitaledu.sms.common.StudentStatus;
-import ge.digitaledu.sms.model.MainModel;
-import ge.digitaledu.sms.model.MainModelService;
+import ge.digitaledu.sms.model.Model;
+import ge.digitaledu.sms.model.StudentModelService;
 import ge.digitaledu.sms.model.entity.Lecture;
 import ge.digitaledu.sms.model.entity.Student;
 import ge.digitaledu.sms.utils.Method;
@@ -13,8 +13,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+import java.util.List;
 
 /**
  * ეს კლასი ერთ-ერთი კონტროლერია(ანუ ჯავასთვის სერვლეტი), რომელიც გამომდინარეობს ჩვენთვის ნაცნობი MainController დან
@@ -36,7 +35,11 @@ public class StudentController extends MainController {
      */
     @Override
     protected void request(HttpServletRequest request, HttpServletResponse response, Method method) {
+
+        Model model = new StudentModelService(Student.class);
+
         if (method == Method.POST) {
+            boolean edit = Boolean.valueOf(request.getParameter("edit"));
             String firstName = request.getParameter("firstname");
             String lastName = request.getParameter("lastname");
             String bDate = request.getParameter("birthdate");
@@ -54,6 +57,7 @@ public class StudentController extends MainController {
             student.setLastName(lastName);
             student.setFirstName(firstName);
             student.setBirthDate(bDate);
+            student.setStatus(StudentStatus.valueOf(status));
 
             if (gender.equals("m")) {
                 student.setGender(Gender.MALE);
@@ -61,44 +65,84 @@ public class StudentController extends MainController {
                 student.setGender(Gender.FEMALE);
             }
 
+            // TODO
+            // ეს გადასაკეთებელია, ისე რომ ლექცია აქ არ იქმნებოდეს და დინამიურად მოქონდეს ბაზიდან
             Lecture lectureObj = new Lecture();
             lectureObj.setLectureName(lecture);
             lectureObj.setState(LectureState.IN_PROGRESS);
             lectureObj.setId(1);
             student.setLecture(lectureObj);
+
+
             student.setStatus(StudentStatus.ACTIVE);
 
             /**
-             * მთავარი მოდელის ჩატვირთვა
+             * შენახვა ან ცვლილება
              */
-            MainModel studentModel = new MainModelService();
+            if (edit) {
+                model.update(student, Integer.parseInt(request.getParameter("id")));
+            } else {
+                model.save(student);
+            }
 
-            /**
-             * შენახვა
-             */
-            studentModel.save(student);
+            try {
+                response.sendRedirect(request.getContextPath() + "/Students");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if (method == Method.GET) {
-            try {
-                request.setAttribute("statusList", StudentStatus.values());
-                RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index.jsp");
-                dispatcher.forward(request, response);
-            } catch (Exception ex) {
-
+            String action = request.getParameter("action");
+            if (action == null) {
+                showData(model, request, response);
+            } else if (action.equals("add")) {
+                addOrEditData(model, request, response, false, 0);
+            } else if (action.equals("edit")) {
+                addOrEditData(model, request, response, true, Integer.parseInt(request.getParameter("id")));
+            } else if (action.equals("delete")) {
+                deleteData(model, request, response, Integer.parseInt(request.getParameter("id")));
+            } else {
+                showData(model, request, response); // default page
             }
         }
-        // TODO writer
     }
 
-    public void testMethod(String argument) throws NullPointerException, IllegalArgumentException {
-        if (argument == null) {
-            throw new NullPointerException("");
-        }
+    private void showData(Model model, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            List<Student> students = model.getAll();
 
-        if (argument.length() <= 1) {
-            throw new IllegalArgumentException("String must pass minimum 2 characters");
+            request.setAttribute("students", students);
+            request.setAttribute("statusList", StudentStatus.values());
+            request.setAttribute("genders", Gender.values());
+            request.setAttribute("lectureList", LectureState.values());
+            RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/students/students.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        System.out.println("method example 1 " + argument.toLowerCase());
+    }
+
+    private void addOrEditData(Model model, HttpServletRequest request, HttpServletResponse response, boolean edit, int id) {
+        try {
+            Student student = (Student) model.getSingle(id);
+
+            request.setAttribute("isEdit", edit);
+            request.setAttribute("student", student);
+            request.setAttribute("statusList", StudentStatus.values());
+            RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/students/students_edit.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void deleteData(Model model, HttpServletRequest request, HttpServletResponse response, int id) {
+        try {
+            model.delete(id);
+            response.sendRedirect(request.getContextPath() + "/Students");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

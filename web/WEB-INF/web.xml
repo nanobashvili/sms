@@ -27,8 +27,3 @@
         <servlet-class>ge.digitaledu.sms.controller.LectureController</servlet-class>
     </servlet>
 </web-app>
-
-<!--
-amirans snickers
-გივი სნიკერსი უფრო პატარა
--->
